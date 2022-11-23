@@ -1,0 +1,52 @@
+{
+    "name": "delgont/cms",
+    "description" : "Larevel Content Management System",
+    "keywords": [
+        "laravel CMS",
+        "laravel",
+        "laravel content management system", 
+        "Delgont CMS"
+    ],
+    "homepage": "https://github.com/delgont/delgont",
+    "type" : "project",
+    "license" : "MIT",
+    "authors" : [
+        {
+            "name" : "Stephen Okello Omoding",
+            "email" : "okellostephenomoding@gmail.com",
+            "role" : "Developer"
+        },
+        {
+            "name" : "Stephen Delgont",
+            "email" : "stephen.delgont@outlook.com",
+            "role" : "Project Manager, Developer"
+        }
+    ],
+    "require": {
+        "laravel/framework": "^6.0",
+        "laravel/passport": "^9.3.2",
+        "laravel/helpers": "^1.5.0"
+    },
+    "prefer-stable": true,
+    "minimum-stability": "dev",
+    "autoload": {
+        "psr-4": {
+            "Delgont\\Cms\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Delgont\\Cms\\Test\\": "tests/"
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Delgont\\Cms\\DelgontServiceProvider"
+            ]
+        }
+    }
+}
