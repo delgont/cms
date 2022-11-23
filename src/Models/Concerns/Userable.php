@@ -7,4 +7,9 @@ trait Userable {
     {
         return $this->morphOne('App\User', 'userable');
     }
+
+    public function scopeWithUser($query)
+    {
+        return $query->with(['user']);
+    }
 }

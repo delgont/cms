@@ -13,7 +13,5 @@ class Admin extends Model
     
     protected $guarded = [];
 
-    protected $with = ['user'];
-
     
 }

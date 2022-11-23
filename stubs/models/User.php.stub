@@ -12,10 +12,14 @@ use Delgont\Cms\Concerns\HasPermissions;
 use Delgont\Cms\Concerns\HasActivityLog;
 use Delgont\Cms\Models\Concerns\CanComment;
 use Delgont\Cms\Models\Concerns\HasAvator;
+use Delgont\Cms\Models\Concerns\HasUserType;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, Notifiable, HasPermissions, HasRoles, HasActivityLog, CanComment, HasAvator;
+    use HasApiTokens, Notifiable, HasPermissions, HasRoles, HasActivityLog, CanComment, HasAvator, HasUserType;
+
+    
+    protected $appends = array('type');
     
     /**
      * The attributes that are mass assignable.
@@ -43,12 +47,8 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
-
     protected $with = ['avator:id,url,iconable_id'];
 
-    public function userable()
-    {
-        return $this->morphTo();
-    }
+    
 
 }

@@ -24,7 +24,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::where('id', '!=' ,auth()->user()->id)->orderBY('created_at', 'desc')->paginate(10);
+        $users = User::withUserable()->where('id', '!=' ,auth()->user()->id)->orderBY('created_at', 'desc')->paginate(10);
         return (request()->expectsJson()) ? response()->json($users) : view('delgont::users.index', compact(['users']));
     }
 
@@ -76,7 +76,7 @@ class UserController extends Controller
      */
     public function show($username)
     {
-        $user = User::with(['roles'])->where('name', $username)->firstOrFail();
+        $user = User::withUserable()->with(['roles'])->where('name', $username)->firstOrFail();
         return (request()->expectsJson()) ? response()->json($admin) : view('delgont::users.show', compact(['user']));
     }
 
