@@ -52,6 +52,7 @@ class  TemplateSyncCommand extends Command
             foreach ($this->templates as $key => $value) {
                 Template::updateOrCreate(['path' => $key],[
                     'name' => (is_array($value)) ? (array_key_exists('name', $value)) ? $value['name'] : Str::random(10) : Str::random(10),
+                    'description' => (is_array($value)) ? (array_key_exists('description', $value)) ? $value['description'] : Str::random(10) : Str::random(10),
                     'preview' => (is_array($value)) ? (array_key_exists('preview', $value)) ? $value['preview'] : Str::random(10) : Str::random(10),
                     'path' => $key,
                     'created_at' => now()

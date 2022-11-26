@@ -45,7 +45,7 @@ class Menu extends Model
 
     public function scopeWithSimpleMenuItems($query)
     {
-        return $query->with('navbarMenuItems');
+        return $query->with('navMenuItems');
     }
 
 }

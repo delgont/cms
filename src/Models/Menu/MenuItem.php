@@ -4,7 +4,6 @@ namespace Delgont\Cms\Models\Menu;
 
 use Illuminate\Database\Eloquent\Model;
 
-use Delgont\Cms\Models\Post\Post;
 use Delgont\Cms\Models\Menu\Menu;
 
 class MenuItem extends Model

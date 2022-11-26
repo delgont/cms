@@ -37,6 +37,8 @@ class Post extends Model
 
     protected $searchable = ['post_title', 'extract_text', 'posttype.name'];
 
+    protected $appends = ['url'];
+
 
    
 
@@ -201,6 +203,14 @@ class Post extends Model
             return 'page';
         }
         return 'post';
+    }
+
+    public function getUrlAttribute()
+    {
+        if ($this->slug) {
+            return url($this->slug);
+        }
+        return null;
     }
   
 }

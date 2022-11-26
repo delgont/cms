@@ -7,7 +7,7 @@ use Delgont\Cms\Models\Post\Post;
 
 class PostService
 {
-    const POSTS_ATTRIBUTES = ['id', 'post_title', 'created_at', 'updated_at', 'post_type_id', 'template_id', 'created_by', 'updated_by'];
+    const POSTS_ATTRIBUTES = ['id', 'post_title', 'slug', 'url', 'created_at', 'updated_at', 'post_type_id', 'template_id', 'created_by', 'updated_by'];
     const POST_ATTRIBUTES = ['id', 'post_title'];
 
     public function all($paginated = true, $attributes = self::POSTS_ATTRIBUTES)
