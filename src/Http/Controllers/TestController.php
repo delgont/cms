@@ -3,6 +3,7 @@
 namespace Delgont\Cms\Http\Controllers;
 
 use Delgont\Cms\Http\Controllers\Controller;
+
 use Illuminate\Http\Request;
 
 use Delgont\Cms\Services\Post\PostSearchService;

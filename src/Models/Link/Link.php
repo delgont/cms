@@ -1,10 +1,9 @@
 <?php
 
-namespace Stephendevs\Pagman\Models\Link;
+namespace Delgont\Cms\Models\Link;
 
 use Delgont\Cms\Models\Concerns\Iconable;
 use Delgont\Cms\Models\Concerns\Categorable;
-
 
 use Illuminate\Database\Eloquent\Model;
 

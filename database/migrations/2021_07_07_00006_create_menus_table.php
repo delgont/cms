@@ -18,7 +18,7 @@ class CreateMenusTable extends Migration
             $table->string('name')->unique();
             $table->string('key')->unique()->nullable();
             $table->unsignedBigInteger('parent_id')->nullable();
-            $table->foreign('parent_id')->references('id')->on('menus')->onDelete('cascade');
+            $table->foreign('parent_id')->references('id')->on('menus')->onDelete('set null');
             $table->timestamps();
         });
     }

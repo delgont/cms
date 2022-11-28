@@ -4,15 +4,15 @@ namespace Delgont\Cms\Models\Post;
 
 
 use Illuminate\Database\Eloquent\Model;
-use Delgont\Cms\Models\Concerns\Mediable;
 use Delgont\Cms\Models\Concerns\Categorable;
 use Delgont\Cms\Models\Concerns\Iconable;
 use Delgont\Cms\Models\Concerns\Downloadable;
 use Delgont\Cms\Models\Concerns\HasAuthor;
 use Delgont\Cms\Models\Concerns\UpdatedBY;
 use Delgont\Cms\Models\Concerns\HasComments;
-use Delgont\Cms\Models\Concerns\HasDownloadables;
 use Delgont\Cms\Models\Concerns\HasPostsOfType;
+
+use Delgont\Cms\Models\Concerns\HasLinks;
 
 use Delgont\Cms\Models\Concerns\Searchable;
 
@@ -28,7 +28,7 @@ use Delgont\Cms\Models\Menu\Menu;
 
 class Post extends Model
 {
-    use Mediable, Categorable, Iconable, HasAuthor, UpdatedBy, SoftDeletes, HasComments, HasDownloadables, HasPostsOfType, Searchable;
+    use Categorable, Iconable, HasAuthor, UpdatedBy, SoftDeletes, HasComments, HasPostsOfType, Searchable, HasLinks;
 
 
     protected $fillable = [

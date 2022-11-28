@@ -6,6 +6,13 @@ trait HasLinks
 {
     public function links()
     {
-        return $this->morphMany('Delgont\Cms\Models\Link\Link', 'linkable');
+        $relation = $this->morphToMany(
+            'Delgont\Cms\Models\Link\Link',
+            'model',
+            'model_has_links',
+            'model_id',
+            'link_id'
+        );
+        return $relation;
     }
 }

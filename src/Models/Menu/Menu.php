@@ -6,8 +6,12 @@ use Delgont\Cms\Models\Post\Post;
 
 use Illuminate\Database\Eloquent\Model;
 
+use Delgont\Cms\Models\Concerns\Children;
+
+
 class Menu extends Model
 {
+    use Children;
     
     protected $guarded = [];
 
@@ -21,11 +25,7 @@ class Menu extends Model
         return $this->hasMany(Post::class, 'menu_id');
     }
 
-    public function children()
-    {
-        return $this->hasMany(Menu::class, 'parent_id')->with('menus');
-    }
-   
+
     public function menuItems()
     {
         return $this->hasMany('Delgont\Cms\Models\Menu\MenuItem');

@@ -2,7 +2,9 @@
 
 namespace Delgont\Cms\Http\Controllers\Auth;
 
-use Delgont\Lad\Http\Controllers\Controller;
+use Delgont\Cms\Http\Controllers\Controller;
+
+
 use Illuminate\Foundation\Auth\SendsPasswordResetEmails;
 
 use Illuminate\Support\Facades\Auth;

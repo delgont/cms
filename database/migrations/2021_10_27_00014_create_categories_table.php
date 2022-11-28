@@ -22,8 +22,22 @@ class CreateCategoriesTable extends Migration
                 $table->unsignedBigInteger('parent_id')->nullable();
                 $table->foreign('parent_id')->references('id')->on('categories')->onDelete('cascade');
                 $table->timestamps();
+
             });
        }
+
+       if(!Schema::hasTable('categorables') && Schema::hasTable('categories')){
+        Schema::create('categorables', function (Blueprint $table) {
+            $table->unsignedBigInteger('category_id');
+            $table->unsignedBigInteger('categorable_id');
+            $table->string('categorable_type');
+            $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
+            $table->timestamps();
+
+            $table->primary(['category_id', 'categorable_id', 'categorable_type'], 'categorable_category_id_categorable_id_categorable_type_primary');
+
+        });
+    }
     }
 
     /**

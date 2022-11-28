@@ -24,10 +24,13 @@ use Delgont\Cms\Http\Controllers\Post\PostController;
 use Delgont\Cms\Http\Controllers\Post\PostTypeController;
 use Delgont\Cms\Http\Controllers\Post\PostCommentController;
 use Delgont\Cms\Http\Controllers\Post\PostTrashController;
+use Delgont\Cms\Http\Controllers\Post\PostCategoryController;
 
 use Delgont\Cms\Http\Controllers\Category\CategoryController;
 
 use Delgont\Cms\Http\Controllers\DashboardController;
+
+use Delgont\Cms\Http\Controllers\Auth\ForgotPasswordController;
 
 use Delgont\Cms\Http\Controllers\System\SystemSettingController;
 use Delgont\Cms\Http\Controllers\Settings\GeneralSettingsController;
@@ -131,6 +134,9 @@ Route::group(['prefix' => config('delgont.route_prefix', 'dashboard'), 'middlewa
         Route::get('/posts/posttypes/create', [PostTypeController::class, 'create'])->name('delgont.posts.posttypes.create');
         Route::post('/posts/posttypes/store', [PostTypeController::class, 'store'])->name('delgont.posts.posttypes.store');
         Route::get('/posts/posttypes/destroy/{id}', [PostTypeController::class, 'destroy'])->name('delgont.posts.posttypes.destroy');
+
+        Route::get('/posts/categories', [PostCategoryController::class, 'index'])->name('delgont.posts.categories');
+
 
 
         Route::get('/posts/{id}/comments', [PostCommentController::class, 'index'])->name('delgont.posts.comments');

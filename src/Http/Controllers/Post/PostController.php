@@ -93,7 +93,7 @@ class PostController extends Controller
     public function edit($id)
     {
         $posttypes = PostType::all();
-        $categories = Category::all();
+        $categories = Category::postCategories()->get();
         $post = $this->postService->show($id);
         return (request()->expectsJson()) ? response()->json($post, $posttypes) : view('delgont::posts.edit', compact(['posttypes', 'post', 'categories']));
     }

@@ -4,11 +4,15 @@ namespace Delgont\Cms\Models\Post;
 
 use Delgont\Cms\Models\Post\Post;
 
+use Delgont\Cms\Models\Concerns\Children;
+
+
 
 use Illuminate\Database\Eloquent\Model;
 
 class PostType extends Model
 {
+    use Children;
     
     protected $guarded = [];
 
@@ -23,4 +27,5 @@ class PostType extends Model
     {
         return $this->belongsTo(Page::class);
     }
+
 }

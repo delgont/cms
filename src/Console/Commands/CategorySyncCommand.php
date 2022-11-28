@@ -6,6 +6,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Str;
 
 use Delgont\Cms\Models\Category\Category;
+use Delgont\Cms\Models\Post\Post;
 
 
 class CategorySyncCommand extends Command
@@ -24,7 +25,7 @@ class CategorySyncCommand extends Command
      */
     protected $description = 'Synchronise categories .....';
 
-    private $attributes = ['id', 'name', 'created_at'];
+    private $attributes = ['id', 'name', 'type', 'created_at'];
 
 
 
@@ -49,7 +50,8 @@ class CategorySyncCommand extends Command
         if(count($categories)){
             for ($i=0; $i < count($categories); $i++) { 
                 Category::updateOrCreate([
-                    'name' => $categories[$i]
+                    'name' => $categories[$i],
+                    'type' => Post::class
                 ]);
             }
             $this->info('Categories Synchronised');

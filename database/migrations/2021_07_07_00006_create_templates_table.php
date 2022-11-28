@@ -22,6 +22,8 @@ class CreateTemplatesTable extends Migration
             $table->text('description')->nullable();
             $table->timestamps();
         });
+
+        
     }
 
     /**

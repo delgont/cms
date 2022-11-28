@@ -1,5 +1,4 @@
 <?php
-
 namespace Delgont\Cms\Http\Controllers\Post;
 
 use Delgont\Cms\Http\Controllers\Controller;
@@ -7,10 +6,10 @@ use Illuminate\Http\Request;
 
 use Delgont\Cms\Models\Post\Post;
 
-use Delgont\Cms\Models\Post\PostType;
+use Delgont\Cms\Models\Category\Category;
 
 
-class PostTypeController extends Controller
+class PostCategoryController extends Controller
 {
     /**
     * Display a listing of the posts by its type.
@@ -19,9 +18,8 @@ class PostTypeController extends Controller
     */
     public function index()
     {
-        $posttypes = PostType::withCount(['posts'])->parent()->with(['children'])->orderBy('created_at', 'desc')->get();
-
-        return (request()->expectsJson()) ? response()->json(['posttypes' => $posttypes]) : view('delgont::posts.posttypes.index', compact(['posttypes']));
+        $categories = Category::postCategories()->withCount('posts')->get();
+        return (request()->expectsJson()) ? response()->json(['categories' => $categories]) : view('delgont::posts.categories.index', compact(['categories']));
     }
 
     public function store(Request $request)

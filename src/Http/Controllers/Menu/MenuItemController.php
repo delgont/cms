@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Delgont\Cms\Http\Requests\MenuItemRequest;
 use Delgont\Cms\Models\Menu\Menu;
 use Delgont\Cms\Models\Menu\MenuItem;
+use Delgont\Cms\Models\Post\Post;
 
 
 
@@ -49,7 +50,7 @@ class MenuItemController extends Controller
         $menuitem->sort = $request->sort;
         $menuitem->menuable_id = $request->menuable_id;
         $menuitem->menu_id = $request->menu_id;
-        $menuitem->menuable_type = 'posts';
+        $menuitem->menuable_type = Post::class;
         $menuitem->parent_id = $request->parent_id;
 
         $menuitem->save();

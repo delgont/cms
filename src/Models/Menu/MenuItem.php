@@ -4,12 +4,14 @@ namespace Delgont\Cms\Models\Menu;
 
 use Illuminate\Database\Eloquent\Model;
 
+use Delgont\Cms\Models\Concerns\Children;
+
+
 use Delgont\Cms\Models\Menu\Menu;
 
 class MenuItem extends Model
 {
-
-    //protected $with = ['menuable:id,slug,url'];
+    use Children;
 
     protected $guarded = [];
 
@@ -28,9 +30,10 @@ class MenuItem extends Model
         return $this->hasMany(self::class, 'parent_id')->with('menuable:id,slug');
     }
 
-    public function children()
+
+    public function getChildrenWith()
     {
-        return $this->hasMany(self::class, 'parent_id')->with(['menuItems', 'menuable:id,slug']);
+        return ['menuItems', 'menuable:id,slug'];
     }
 
 

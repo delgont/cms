@@ -2,7 +2,8 @@
 
 namespace Delgont\Cms\Http\Controllers\Account;
 
-use Delgont\Lad\Http\Controllers\Controller;
+use Delgont\Cms\Http\Controllers\Controller;
+
 use Illuminate\Http\Request;
 
 use Delgont\Cms\Models\Account\Account;

@@ -14,7 +14,7 @@ class MenuController extends Controller
 {
     public function index()
     {
-        $menus = Menu::all();
+        $menus = Menu::whereNull('parent_id')->with('children')->get();
         return (request()->expectsJson()) ? response()->json($menus) : view('delgont::menus.index', compact(['menus']));
     }
 

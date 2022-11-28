@@ -17,6 +17,11 @@ class Category extends Model
     use Iconable;
     
     protected $guarded = [];
+
+    public function scopePostCategories($query)
+    {
+        return $query->whereType(Post::class)->orWhereNull('type');
+    }
     
     public function posts()
     {

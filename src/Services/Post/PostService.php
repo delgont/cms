@@ -117,6 +117,7 @@ class PostService
             'parent:id,post_title',
             'menu',
             'postsOfType',
+            'links',
             'comments' => function($q){
                 $q->orderBy('created_at', 'desc')->limit(4);
             }
