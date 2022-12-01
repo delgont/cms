@@ -20,6 +20,7 @@ class MenuController extends Controller
 
     public function show($id)
     {
+
         $menu = Menu::withOrganisedMenuItems()->findOrFail($id);
         $menuItems = MenuItem::whereMenuId($id)->get();
         return view('delgont::menus.edit', compact(['menu', 'menuItems']));

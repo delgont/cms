@@ -25,13 +25,14 @@ class MenuItem extends Model
         return $this->belongsTo('Delgont\Cms\Models\Menu\Menu');
     }
 
+
     public function menuItems()
     {
         return $this->hasMany(self::class, 'parent_id')->with('menuable:id,slug');
     }
 
 
-    public function getChildrenWith()
+    public function getChildrenWith7()
     {
         return ['menuItems', 'menuable:id,slug'];
     }

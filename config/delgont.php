@@ -6,7 +6,7 @@ return [
     | Route prefix for accessing the admin panel for dlegont cms -- default dashboard
     |--------------------------------------------------------------------------
     */
-    'route_prefix' => 'delgont',
+    'route_prefix' => 'dashboard',
 
      /*
     |--------------------------------------------------------------------------

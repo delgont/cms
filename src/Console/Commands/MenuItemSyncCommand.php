@@ -81,7 +81,7 @@ class MenuItemSyncCommand extends Command
                             'sort' => (array_key_exists('sort', $item)) ? $item['sort'] : 0,
                             'menuable_type' => Post::class,
                             'menu_id' => $menu->id,
-                            'menuable_id' => (array_key_exists('post', $item)) ? Post::firstOrCreate(['post_title' => $item['post']])->id : null,
+                            'menuable_id' => (array_key_exists('post', $item)) ? Post::firstOrCreate(['post_title' => $item['post'], 'slug' => (array_key_exists('slug', $item)) ? $item['slug'] : null])->id : null,
                             'parent_id' => (array_key_exists('parent', $item)) ? $this->getOrCreateParent($menu->id, $item['parent']) : null,
                         ]
                     );

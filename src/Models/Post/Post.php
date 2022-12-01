@@ -100,19 +100,6 @@ class Post extends Model
         });
     }
 
-    /**
-     * Local Scope to get posts of a specific category
-     * 
-     * @param $query
-     * @param string $category
-     * @return Object
-     */
-    public function scopeOfCategory($query, $category) : Object
-    {
-        return $query->whereHas('categories', function($categoryQuery) use ($category){
-            (is_array($category)) ? $categoryQuery->where($category) : $categoryQuery->whereName($category)->orWhere('id', $category);;
-        });
-    }
 
     /**
      * Local Scope to get published posts

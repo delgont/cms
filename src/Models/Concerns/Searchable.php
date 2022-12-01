@@ -35,7 +35,7 @@ trait Searchable
      *
      * @return array
      */
-    public function searchableAttributes()
+    protected function searchableAttributes()
     {
         if(method_exists($this, 'searchable')){
             return $this->searchable();

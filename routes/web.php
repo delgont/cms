@@ -7,10 +7,6 @@ use Delgont\Cms\Http\Controllers\Auth\AuthController;
 use Delgont\Cms\Http\Controllers\AdminController;
 use Delgont\Cms\Http\Controllers\UserController;
 
-use Delgont\Cms\Http\Controllers\Account\AccountController;
-use Delgont\Cms\Http\Controllers\Account\ActivityLogController;
-use Delgont\Cms\Http\Controllers\Account\AccountSettingController;
-use Delgont\Cms\Http\Controllers\Account\AccountNotificationsController;
 use Delgont\Cms\Http\Controllers\Account\PasswordController;
 
 use Delgont\Cms\Http\Controllers\Page\PageController;
@@ -18,13 +14,8 @@ use Delgont\Cms\Http\Controllers\Page\PageController;
 use Delgont\Cms\Http\Controllers\Menu\MenuController;
 use Delgont\Cms\Http\Controllers\Menu\MenuItemController;
 
-use Delgont\Cms\Http\Controllers\Template\TemplateController;
 
-use Delgont\Cms\Http\Controllers\Post\PostController;
-use Delgont\Cms\Http\Controllers\Post\PostTypeController;
-use Delgont\Cms\Http\Controllers\Post\PostCommentController;
-use Delgont\Cms\Http\Controllers\Post\PostTrashController;
-use Delgont\Cms\Http\Controllers\Post\PostCategoryController;
+
 
 use Delgont\Cms\Http\Controllers\Category\CategoryController;
 
@@ -35,7 +26,6 @@ use Delgont\Cms\Http\Controllers\Auth\ForgotPasswordController;
 use Delgont\Cms\Http\Controllers\System\SystemSettingController;
 use Delgont\Cms\Http\Controllers\Settings\GeneralSettingsController;
 
-use Delgont\Cms\Http\Controllers\Download\DownloadController;
 
 use Delgont\Cms\Http\Controllers\TestController;
 
@@ -55,21 +45,9 @@ Route::group(['prefix' => config('delgont.route_prefix', 'dashboard'), 'middlewa
     Route::group(['middleware' => ['auth']], function(){
         Route::post('/logout', [AuthController::class, 'logout'])->name('delgont.logout');
 
-        Route::get('/account', [AccountController::class, 'index'])->name('delgont.account');
+        Route::prefix('/account')->group(__DIR__.'/web/account.php');
 
-        Route::get('/account/password', [PasswordController::class, 'index'])->name('delgont.account.password');
-        Route::post('/account/password/update', [PasswordController::class, 'update'])->name('delgont.account.password.update');
-
-        Route::post('/account/change/avator', [AccountController::class, 'updateAvator'])->name('delgont.account.change.avator');
-        Route::get('/account/settings', [AccountSettingController::class, 'index'])->name('delgont.account.settings');
-
-        Route::get('/account/activitylog', [ActivityLogController::class, 'index'])->name('delgont.account.activitylog');
-        Route::get('/account/activitylog/{id}', [ActivityLogController::class, 'destroy'])->name('delgont.account.activitylog.destroy');
-
-        Route::get('/account/notifications', [AccountNotificationsController::class, 'index'])->name('delgont.account.notifications');
-        Route::get('/account/notifications/count', [AccountNotificationsController::class, 'count'])->name('delgont.account.notifications.count');
-        Route::get('/account/notifications/{id}', [AccountNotificationsController::class, 'show'])->name('delgont.account.notifications.show');
-        Route::get('/account/notifications/destroy/{id}', [AccountNotificationsController::class, 'destroy'])->name('delgont.account.notifications.destroy');
+        
 
 
 
@@ -106,47 +84,13 @@ Route::group(['prefix' => config('delgont.route_prefix', 'dashboard'), 'middlewa
         Route::post('/menuitem/store', [MenuItemController::class, 'store'])->name('delgont.menus.menuitem.store');
         Route::get('/menuitem/destroy/{id}', [MenuItemController::class, 'destroy'])->name('delgont.menus.menuitem.destroy');
 
-        Route::get('/posts', [PostController::class, 'index'])->name('delgont.posts');
-        Route::get('/posts/create', [PostController::class, 'create'])->name('delgont.posts.create');
-        Route::get('/posts/create/duplicate/{id}', [PostController::class, 'duplicate'])->name('delgont.posts.create.duplicate');
-        Route::post('/posts/create', [PostController::class, 'store'])->name('delgont.posts.store');
-        Route::get('/posts/show/{id}', [PostController::class, 'show'])->name('delgont.posts.show');
-        Route::get('/posts/edit/{id}', [PostController::class, 'edit'])->name('delgont.posts.edit');
-        Route::post('/posts/update/{id}', [PostController::class, 'update'])->name('delgont.posts.update');
-        Route::get('/posts/destroy/{id}', [PostController::class, 'destroy'])->name('delgont.posts.destroy');
+        /**Posts Routes*/
+        Route::prefix('/posts')->group(__DIR__.'/web/posts.php');
 
-        Route::get('/posts/publish/{id}', [PostController::class, 'publish'])->name('delgont.posts.publish');
-        Route::get('/posts/unpublish/{id}', [PostController::class, 'unpublish'])->name('delgont.posts.unpublish');
+        /**Templates Routes*/
+        Route::prefix('/templates')->group(__DIR__.'/web/templates.php');
 
-
-        Route::post('/posts/edit/featuredimage/{id}', [PostController::class, 'editFeaturedImage'])->name('delgont.posts.edit.featuredimage');
-        Route::post('/posts/destroy/featuredimage/{id}', [PostController::class, 'destroyFeaturedImage'])->name('delgont.posts.destroy.featuredimage');
-
-
-        Route::get('/posts/trash', [PostTrashController::class, 'index'])->name('delgont.posts.trash');
-        Route::get('/posts/trash/{id}', [PostTrashController::class, 'show'])->name('delgont.posts.trash.show');
-        Route::get('/posts/trash/destroy/{id}', [PostTrashController::class, 'destroy'])->name('delgont.posts.trash.destroy');
-        Route::get('/posts/trash/restore/{id}', [PostTrashController::class, 'restore'])->name('delgont.posts.trash.restore');
-
-        Route::post('/posts/search', [PostController::class, 'search'])->name('delgont.posts.search');
-
-        Route::get('/posts/posttypes', [PostTypeController::class, 'index'])->name('delgont.posts.posttypes');
-        Route::get('/posts/posttypes/create', [PostTypeController::class, 'create'])->name('delgont.posts.posttypes.create');
-        Route::post('/posts/posttypes/store', [PostTypeController::class, 'store'])->name('delgont.posts.posttypes.store');
-        Route::get('/posts/posttypes/destroy/{id}', [PostTypeController::class, 'destroy'])->name('delgont.posts.posttypes.destroy');
-
-        Route::get('/posts/categories', [PostCategoryController::class, 'index'])->name('delgont.posts.categories');
-
-
-
-        Route::get('/posts/{id}/comments', [PostCommentController::class, 'index'])->name('delgont.posts.comments');
-        Route::post('/posts/{id}/comments', [PostCommentController::class, 'store'])->name('delgont.posts.comments.store');
-        Route::post('/posts/comment/update/{comment_id}', [PostCommentController::class, 'update'])->name('delgont.posts.comments.update');
-
-        Route::get('/templates', [TemplateController::class, 'index'])->name('delgont.templates');
-        Route::get('/templates/{id}', [TemplateController::class, 'show'])->name('delgont.templates.show');
-        Route::post('/templates/disable/{id}', [TemplateController::class, 'disable'])->name('delgont.templates.disable');
-        Route::post('/templates/enable/{id}', [TemplateController::class, 'disable'])->name('delgont.templates.enable');
+       
 
 
 
@@ -155,7 +99,15 @@ Route::group(['prefix' => config('delgont.route_prefix', 'dashboard'), 'middlewa
         Route::get('/categories/edit/{id}', [CategoryController::class, 'edit'])->name('delgont.categories.edit');
         Route::get('/categories/destroy/{id}', [CategoryController::class, 'destroy'])->name('delgont.categories.destroy');
 
-        Route::get('/downloads', [DownloadController::class, 'index'])->name('delgont.downloads');
+
+        /**
+         * Files File Routes
+         */
+        Route::prefix('/files')->group(__DIR__.'/web/files.php');
+
+       
+
+
         Route::get('/downloads/create', [DownloadController::class, 'create'])->name('delgont.downloads.create');
         Route::post('/downloads/store', [DownloadController::class, 'store'])->name('delgont.downloads.store');
         Route::get('/downloads/show/{id}', [DownloadController::class, 'show'])->name('delgont.downloads.show');

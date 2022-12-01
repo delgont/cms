@@ -16,7 +16,7 @@ class CreateGroupsTable extends Migration
         Schema::create('groups', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('name')->unique();
-            $table->string('type')->nullable(); /// The model class for which this group is assigned
+            $table->string('type')->nullable(); /// The model class for which this group is assigned, null cuts across all models
             $table->text('description')->nullable();
             $table->timestamps();
            

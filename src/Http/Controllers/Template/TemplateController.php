@@ -7,36 +7,30 @@ use Illuminate\Http\Request;
 
 use Delgont\Cms\Models\Category\Category;
 
-use Delgont\Cms\Http\Requests\PostRequest;
-use Delgont\Cms\Models\Post\PostType;
+use Delgont\Cms\Models\Template\Template;
 
-use Delgont\Cms\Services\Post\PostService;
-use Delgont\Cms\Services\Image\ImageUploadService;
 
 
 use Delgont\Cms\Services\Template\TemplateService;
 
-
-
-
 class TemplateController extends Controller
 {
-    private $templateService;
 
-    public function __construct(TemplateService $templateService)
+    public function __construct()
     {
-        $this->templateService = $templateService;
     }
 
     public function index()
     {
-        $templates = $this->templateService->all();
+        $templates = app(Template::class)::with(['categories', 'icon', 'groups'])->withCount(['posts', 'sections'])->paginate(6);
         return (request()->expectsJson()) ? response()->json($templates) : view('delgont::templates.index', compact(['templates']));
     }
 
     public function show($id)
     {
-        $template = $this->templateService->show($id);
+        $template = app(Template::class)::with([
+            'options'
+        ])->findOrFail($id);
         return (request()->expectsJson()) ? response()->json($template) : view('delgont::templates.show', compact(['template']));
     }
 

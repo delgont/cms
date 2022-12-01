@@ -8,12 +8,20 @@ use Illuminate\Database\Eloquent\Model;
 
 use Delgont\Cms\Models\Post\Post;
 
-use Delgont\Cms\Models\Concerns\Sectionable;
+use Delgont\Cms\Models\Concerns;
 
 
 class Template extends Model
 {
-    use Sectionable;
+    use Concerns\Sectionable,
+        Concerns\Searchable,
+        Concerns\Categorable,
+        Concerns\Groupable,
+        Concerns\HasOptions,
+        Concerns\Iconable,
+        Concerns\HasOptions;
+
+
 
     protected $fillable = ['name', 'path', 'preview'];
 

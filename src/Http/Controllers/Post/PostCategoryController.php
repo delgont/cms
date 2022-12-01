@@ -18,7 +18,7 @@ class PostCategoryController extends Controller
     */
     public function index()
     {
-        $categories = Category::postCategories()->withCount('posts')->get();
+        $categories = Category::postCategories()->withCount('posts')->paginate(6);
         return (request()->expectsJson()) ? response()->json(['categories' => $categories]) : view('delgont::posts.categories.index', compact(['categories']));
     }
 
