@@ -11,3 +11,4 @@ Route::post('/enable/{id}', [TemplateController::class, 'disable'])->name('delgo
 
 Route::get('/sections', [SectionController::class, 'index'])->name('delgont.templates.sections');
 Route::get('/sections/show/{id}', [SectionController::class, 'show'])->name('delgont.templates.sections.show');
+Route::post('/sections/settings/update/{id}', [SectionController::class, 'updateSettings'])->name('delgont.templates.sections.settings.update');

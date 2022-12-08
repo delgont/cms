@@ -18,6 +18,10 @@ class Category extends Model
     
     protected $guarded = [];
 
+    protected $casts = [
+        'hidden' => 'boolean'
+    ];
+
     public function scopePostCategories($query)
     {
         return $query->whereType(Post::class)->orWhereNull('type');

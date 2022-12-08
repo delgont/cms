@@ -41,14 +41,15 @@ class PostController extends Controller
     public function create()
     {
         $posttypes = PostType::all();
-        $categories = Category::all();
+        $categories = Category::postCategories()->get();
         return (request()->expectsJson()) ? response()->json($categories, $posttypes) : view('delgont::posts.create', compact(['categories', 'posttypes']));
     }
 
     public function duplicate($id)
     {
         $posttypes = PostType::all();
-        $categories = Category::all();
+        $categories = Category::postCategories()->get();
+
         $duplicate = $this->postService->show($id);
 
         return (request()->expectsJson()) ? response()->json($categories, $posttypes) : view('delgont::posts.duplicate', compact(['categories', 'posttypes', 'duplicate']));
