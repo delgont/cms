@@ -19,6 +19,8 @@ use Delgont\Cms\Http\Controllers\Menu\MenuItemController;
 
 use Delgont\Cms\Http\Controllers\Category\CategoryController;
 
+use Delgont\Cms\Http\Controllers\Command\CommandController;
+
 use Delgont\Cms\Http\Controllers\DashboardController;
 
 use Delgont\Cms\Http\Controllers\Auth\ForgotPasswordController;
@@ -43,27 +45,17 @@ Route::group(['prefix' => config('delgont.route_prefix', 'dashboard'), 'middlewa
     });
 
     Route::group(['middleware' => ['auth']], function(){
+
         Route::post('/logout', [AuthController::class, 'logout'])->name('delgont.logout');
 
         Route::prefix('/account')->group(__DIR__.'/web/account.php');
 
+        Route::prefix('/users')->group(__DIR__.'/web/users.php');
+
+        Route::prefix('/menus')->group(__DIR__.'/web/menus.php');
+
+
         
-
-
-
-        Route::get('/users/admins', [AdminController::class, 'index'])->name('delgont.users.admins');
-        Route::get('/admins/add-new', [AdminController::class, 'create'])->name('delgont.admins.create');
-        Route::post('/admins/add-new', [AdminController::class, 'store'])->name('delgont.admins.store');
-
-        Route::get('/users', [UserController::class, 'index'])->name('delgont.users');
-        Route::get('/users/create', [UserController::class, 'create'])->name('delgont.users.create');
-        Route::post('/users/store', [UserController::class, 'store'])->name('delgont.users.store');
-        Route::get('/users/{username}', [UserController::class, 'show'])->name('delgont.users.show');
-        Route::get('/users/edit/{username}/{id}', [UserController::class, 'edit'])->name('delgont.users.edit');
-        Route::post('/users/update/{id}', [UserController::class, 'update'])->name('delgont.users.update');
-        Route::get('/users/destroy/{id}', [UserController::class, 'destroy'])->name('delgont.users.destroy');
-        Route::post('/users/change/password/{id}', [UserController::class, 'changePassword'])->name('delgont.users.change.password');
-        Route::get('/users/{username}/activitylog', [UserController::class, 'index'])->name('delgont.admins.activitylog');
 
         Route::get('/pages', [PageController::class, 'index'])->name('delgont.pages');
         Route::get('/pages/create', [PageController::class, 'create'])->name('delgont.pages.create');
@@ -78,11 +70,6 @@ Route::group(['prefix' => config('delgont.route_prefix', 'dashboard'), 'middlewa
 
 
 
-        Route::get('/menus', [MenuController::class, 'index'])->name('delgont.menus');
-        Route::get('/menus/{id}', [MenuController::class, 'show'])->name('delgont.menus.menu.show');
-
-        Route::post('/menuitem/store', [MenuItemController::class, 'store'])->name('delgont.menus.menuitem.store');
-        Route::get('/menuitem/destroy/{id}', [MenuItemController::class, 'destroy'])->name('delgont.menus.menuitem.destroy');
 
         /**Posts Routes*/
         Route::prefix('/posts')->group(__DIR__.'/web/posts.php');
@@ -93,6 +80,9 @@ Route::group(['prefix' => config('delgont.route_prefix', 'dashboard'), 'middlewa
        
 
 
+
+        Route::get('/commands', [CommandController::class, 'index'])->name('delgont.commands');
+        Route::post('/commands/run', [CommandController::class, 'run'])->name('delgont.commands.run');
 
         Route::get('/categories', [CategoryController::class, 'index'])->name('delgont.categories');
         Route::post('/categories/store', [CategoryController::class, 'store'])->name('delgont.categories.store');
@@ -122,7 +112,11 @@ Route::group(['prefix' => config('delgont.route_prefix', 'dashboard'), 'middlewa
         Route::post('/settings/general', [GeneralSettingsController::class, 'store']);
 
 
-        Route::post('/test', [TestController::class, 'index'])->name('test');
+        Route::get('/test', [TestController::class, 'index'])->name('test');
+        Route::get('/test/store', [TestController::class, 'store'])->name('test.store');
+        Route::get('/test/show/{id}', [TestController::class, 'show'])->name('test.show');
+        Route::get('/test/update/{id}', [TestController::class, 'show'])->name('test.show');
+        Route::get('/test/delete/{id}', [TestController::class, 'destroy'])->name('test.destroy');
 
     });
 
@@ -141,11 +135,7 @@ Route::group(['prefix' => 'api'], function(){
  
         Route::group(['middleware' => ['api','auth:api']], function(){
 
-            Route::get('/account', [AccountController::class, 'index']);
-            Route::get('/account/activitylog', [AccountController::class, 'activityLog']);
-            Route::post('/account/change/password', [AccountController::class, 'changePassword']);
-            Route::post('/account/change/avator', [AccountController::class, 'updateAvator']);
-            Route::get('/account/settings', [AccountSettingController::class, 'index']);
+            Route::prefix('/account')->group(__DIR__.'/web/account.php');
 
             Route::get('/users', [UserController::class, 'index']);
             Route::get('/users/create', [UserController::class, 'create']);

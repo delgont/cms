@@ -38,6 +38,7 @@ Route::post('/posttypes/store', [PostTypeController::class, 'store'])->name('del
 Route::get('/posttypes/destroy/{id}', [PostTypeController::class, 'destroy'])->name('delgont.posts.posttypes.destroy');
 
 Route::get('/categories', [PostCategoryController::class, 'index'])->name('delgont.posts.categories');
+Route::get('/categories/create', [PostCategoryController::class, 'create'])->name('delgont.posts.categories.create');
 
 
 
