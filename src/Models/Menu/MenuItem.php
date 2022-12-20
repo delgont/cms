@@ -37,5 +37,10 @@ class MenuItem extends Model
         return ['menuItems', 'menuable:id,slug'];
     }
 
+    public function scopeOfMenu($query, $menu_id)
+    {
+        return $menu_id;
+    }
+
 
 }

@@ -8,6 +8,7 @@ use Delgont\Cms\Models\Page\Page;
 use Delgont\Cms\Models\Post\Post;
 use Delgont\Cms\Models\Media\Media;
 use Delgont\Cms\Models\Concerns\Iconable;
+use Delgont\Cms\Models\Category\Categorable;
 
 
 
@@ -50,6 +51,11 @@ class Category extends Model
     public function children()
     {
         return $this->hasMany(Category::class, 'parent_id')->with('categories');
+    }
+
+    public function categorables()
+    {
+        return $this->hasMany(Categorable::class);
     }
   
 }

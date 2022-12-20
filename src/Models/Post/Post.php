@@ -8,7 +8,7 @@ use Delgont\Cms\Models\Concerns\Categorable;
 use Delgont\Cms\Models\Concerns\Iconable;
 use Delgont\Cms\Models\Concerns\Downloadable;
 use Delgont\Cms\Models\Concerns\HasAuthor;
-use Delgont\Cms\Models\Concerns\UpdatedBY;
+use Delgont\Cms\Models\Concerns\UpdatedBy;
 use Delgont\Cms\Models\Concerns\HasComments;
 use Delgont\Cms\Models\Concerns\HasPostsOfType;
 
@@ -22,13 +22,14 @@ use Delgont\Cms\Models\Post\PostType;
 
 use Delgont\Cms\Models\Category\Category;
 use Delgont\Cms\Models\Template\Template;
-
 use Delgont\Cms\Models\Menu\Menu;
+
+use Illuminate\Database\Eloquent\Concerns\HasEvents;
 
 
 class Post extends Model
 {
-    use Categorable, Iconable, HasAuthor, UpdatedBy, SoftDeletes, HasComments, HasPostsOfType, Searchable, HasLinks;
+    use Categorable, Iconable, HasAuthor, UpdatedBy, SoftDeletes, HasComments, HasPostsOfType, Searchable, HasLinks, HasEvents;
 
 
     protected $fillable = [
@@ -40,46 +41,10 @@ class Post extends Model
     protected $appends = ['url'];
 
 
-   
-
     public function scopePages($query)
     {
         return $query->whereType('2');
     }
-
-    //Retrieve posts of a specific type
-    public function scopePosts($query, $type = null, $paginated = false, $count = 4)
-    {
-        if($paginated){
-            if($type != null){
-                return $query
-                ->where('post_type', $type)
-                ->paginate($count);
-            }else{
-                return $query
-                ->paginate($count);
-            }
-        }else{
-            if($type != null){
-                return $query
-                ->where('post_type', $type)
-                ->get();
-            }else{
-                return $query
-                ->get();
-            }
-        }
-        
-    }
-
-
-    public function scopeFindPage($query, $column, $value)
-    {
-        return $query
-        ->where($column, $value)
-        ->where('post_type', 'page');
-    }
-
 
     public function getPublisedAttribute($value)
     {
@@ -99,7 +64,6 @@ class Post extends Model
             (is_array($type)) ? $typeQuery->where($type) : $typeQuery->whereName($type)->orWhere('id', $type);
         });
     }
-
 
     /**
      * Local Scope to get published posts
@@ -169,9 +133,9 @@ class Post extends Model
 
 
 
-    public function children()
+    public function children(array $relations = [])
     {
-        return $this->hasMany(Post::class, 'parent_id')->with('posts');
+        return $this->hasMany(Post::class, 'parent_id')->with($relations);
     }
 
     public function setSlugAttribute($value)
@@ -199,5 +163,6 @@ class Post extends Model
         }
         return null;
     }
+   
   
 }

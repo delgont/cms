@@ -15,6 +15,7 @@ class Menu extends Model
     
     protected $guarded = [];
 
+
     public function menus()
     {
         return $this->hasMany(Menu::class, 'parent_id');

@@ -25,7 +25,8 @@
     "require": {
         "laravel/framework": "^6.0",
         "laravel/passport": "^9.3.2",
-        "laravel/helpers": "^1.5.0"
+        "laravel/helpers": "^1.5.0",
+        "doctrine/dbal": "^2.6"
     },
     "prefer-stable": true,
     "minimum-stability": "dev",

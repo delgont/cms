@@ -10,11 +10,14 @@ use Delgont\Cms\Http\Requests\MenuRequest;
 use Delgont\Cms\Models\Menu\Menu;
 use Delgont\Cms\Models\Menu\MenuItem;
 
+use Delgont\Cms\Repository\Menu\MenuRepository;
+
+
 class MenuController extends Controller
 {
     public function index()
     {
-        $menus = Menu::whereNull('parent_id')->with('children')->get();
+        $menus = app(MenuRepository::class)->paginate();
         return (request()->expectsJson()) ? response()->json($menus) : view('delgont::menus.index', compact(['menus']));
     }
 

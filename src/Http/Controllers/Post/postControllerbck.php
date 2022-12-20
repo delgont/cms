@@ -19,8 +19,6 @@ use Delgont\Cms\Repository\Post\PostRepository;
 
 
 
-
-
 class PostController extends Controller
 {
     private $postService, $imageUploadService;
@@ -39,12 +37,7 @@ class PostController extends Controller
     */
     public function index()
     {
-        $posts = $this->postRepository->paginate(['*'], [
-            'author:id,name',
-            'updatedBy:id,name',
-            'posttype:id,name',
-            'categories:id,name'
-        ]);
+        $posts = $this->postService->all();
         $postsTrashCount = $this->postService->countTrash();
         return (request()->expectsJson()) ? response()->json(['posts' =>$posts, 'postsTrashCount' => $postsTrashCount]) : view('delgont::posts.index', compact(['posts', 'postsTrashCount']));
     }
@@ -91,28 +84,28 @@ class PostController extends Controller
             'post_featured_image' => ($request->hasFile('post_featured_image')) ? $this->imageUploadService->upload(request()->post_featured_image) : null
         ]);
 
-        $post->categories()->sync($request->category);
+        return ($request->expectsJson()) ? response()->json(['success' => true,'message' => 'Post Created Successfully',], 200) : back()->withInput()->with('created', 'Post Created Successfully');
 
+       
+        $post = $this->postService->save([
+            'post_title' => $request->post_title,
+            'slug' => ($request->slug) ? $request->slug : $request->post_title,
+            'post_type_id' => ($request->post_type_id) ? $request->post_type_id : $post_type_id,
+            'extract_text' => $request->extract_text,
+            'post_content' => $request->post_content,
+            'template_id' => $request->template_id,
+            'parent_id' => $request->parent_id,
+            'post_featured_image' => ($request->hasFile('post_featured_image')) ? $this->imageUploadService->upload(request()->post_featured_image) : null
+        ]);
+
+        $this->postService->attachCategories($post, $request->category);
+        
         return ($request->expectsJson()) ? response()->json(['success' => true,'message' => 'Post Created Successfully',], 200) : back()->withInput()->with('created', 'Post Created Successfully');
     }
 
     public function show($id)
     {
-        $post = $this->postRepository->find($id, ['*'], [
-            'author:id,name',
-            'updatedBy:id,name',
-            'categories:id,name',
-            'posttype:id,name',
-            'icon:id,url,iconable_id',
-            'template',
-            'parent:id,post_title',
-            'menu',
-            'postsOfType',
-            'links',
-            'comments' => function($q){
-                $q->orderBy('created_at', 'desc')->limit(4);
-            }
-        ]);
+        $post = $this->postService->show($id);
         return (request()->expectsJson()) ? response()->json($post) : view('delgont::posts.show', compact(['post']));
     }
 
@@ -120,21 +113,7 @@ class PostController extends Controller
     {
         $posttypes = PostType::all();
         $categories = Category::postCategories()->get();
-        $post = $this->postRepository->find($id, ['*'], [
-            'author:id,name',
-            'updatedBy:id,name',
-            'categories:id,name',
-            'posttype:id,name',
-            'icon:id,url,iconable_id',
-            'template',
-            'parent:id,post_title',
-            'menu',
-            'postsOfType',
-            'links',
-            'comments' => function($q){
-                $q->orderBy('created_at', 'desc')->limit(4);
-            }
-        ]);
+        $post = $this->postService->show($id);
         return (request()->expectsJson()) ? response()->json($post, $posttypes) : view('delgont::posts.edit', compact(['posttypes', 'post', 'categories']));
     }
 
@@ -149,12 +128,14 @@ class PostController extends Controller
             'post_featured_image' => 'nullable|mimes:jpeg,png,jpg|max:2048'
         ]);
 
-
-        $post = $this->postRepository->find($id);
+        //return $request;
 
         $post_type_id = ($request->post_type) ? PostType::firstOrCreate(['name' => $request->post_type])->id : null;
 
-        $updated = $this->postRepository->update($id, [
+
+        $post = $this->postService->find($id);
+
+        $this->postService->update($id, [
             'post_title' => $request->post_title,
             'slug' => ($request->slug) ? str_replace(' ','-', $request->slug) : str_replace(' ','-', $request->post_title),
             'post_type_id' => ($request->post_type_id) ? $request->post_type_id : $post_type_id,
@@ -166,12 +147,10 @@ class PostController extends Controller
             'post_featured_image' => ($request->hasFile('post_featured_image')) ? $this->imageUploadService->upload(request()->post_featured_image) : $post->post_featured_image,
             'updated_by' =>  auth()->user()->id
         ]);
+        $this->postService->attachCategories($post, $request->category);
+        $this->postService->attachPostPostType($post, $request->post_post_type_id);
 
-        $post->categories()->sync($request->category);
-        ($request->post_post_type_id) ? $post->postsOfType()->updateOrCreate(['post_id' => $post->id],[
-            'post_id' => $post->id,
-            'post_type_id' => $request->post_post_type_id
-        ]) : '';
+        //return $this->postService->show($id);
 
         return ($request->expectsJson()) ? response()->json(['success' => true,'message' => 'Post Updated Successfully'], 200) : back()->withInput()->with('updated', 'Post Updated Successfully');
     }
