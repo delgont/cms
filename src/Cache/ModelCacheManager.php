@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Artisan;
 
 use Delgont\Cms\Cache\Concerns\HandlesModelCaching;
 
@@ -27,9 +28,9 @@ class ModelCacheManager
         return true;
     }
 
-    protected function flush()
+    public function flush()
     {
-        Cache::flush();
+        Artisan::call('cache:clear');
         return true;
     }
 

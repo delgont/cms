@@ -11,10 +11,9 @@ use Delgont\Cms\Models\Concerns\HasAuthor;
 use Delgont\Cms\Models\Concerns\UpdatedBy;
 use Delgont\Cms\Models\Concerns\HasComments;
 use Delgont\Cms\Models\Concerns\HasPostsOfType;
-
 use Delgont\Cms\Models\Concerns\HasLinks;
-
 use Delgont\Cms\Models\Concerns\Searchable;
+use Delgont\Cms\Models\Concerns\HasOptions;
 
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -29,7 +28,7 @@ use Illuminate\Database\Eloquent\Concerns\HasEvents;
 
 class Post extends Model
 {
-    use Categorable, Iconable, HasAuthor, UpdatedBy, SoftDeletes, HasComments, HasPostsOfType, Searchable, HasLinks, HasEvents;
+    use Categorable, Iconable, HasAuthor, UpdatedBy, SoftDeletes, HasComments, HasPostsOfType, Searchable, HasLinks, HasEvents, HasOptions;
 
 
     protected $fillable = [
@@ -39,7 +38,6 @@ class Post extends Model
     protected $searchable = ['post_title', 'extract_text', 'posttype.name'];
 
     protected $appends = ['url'];
-
 
     public function scopePages($query)
     {

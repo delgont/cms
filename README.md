@@ -1,32 +1,15 @@
-<img align="left" alt="Delgont CMS" width="200px" src="https://raw.githubusercontent.com/delgont/cms/main/post.png" />
-<br />
-<br />
-
-
-
-[![](https://raw.githubusercontent.com/delgont/delgont/main/cover.png)](ttps://www.linkedin.com/in/stephendev)
 
 # Delgont CMS
 
-
 ## Installation
 
-### # Requirements
+#### # Requirements
+`Composer` `Laravel Framework 6.0+`
 
-There are a few requirements you should consider before installing delgont CMS.
-- Composer
-- Laravel Framework 6.0+
-- NPM
+#### # Browser Support
+`Apple Safari` `Google Chrome` `Microsoft Edge` `Mozilla Firefox`
 
-### # Browser Support
-
-Delgont supports modern versions of the following browsers:
-- Apple Safari
-- Google Chrome
-- Microsoft Edge
-- Mozilla Firefox
-
-### # Installing Delgont CMS via composer
+#### # Installing Delgont CMS via composer
 
 After you have installed the core requirements for delgont, you may install it via composer. To get started add `delgont/cms` to the list of required packages in your `composer.json` file.
 
@@ -54,47 +37,39 @@ Alternatively you can install delgont cms by simply running `composer` `require`
 composer require delgont/cms
 ```
 
-### # Finally
 
-Finally, run the `delgont:install` artisan command. This command will install delgont's service provider, public assets and publish configuration files.
+## Setting Up
 
+#### # Publish assets and configuration files
 ```php
 php artisan delgont:install
 ```
-
+#### # Setup delgont database tables
 ```php
 php artisan migrate
 ```
-If you do not have a delgont admin user yet in your users table, you can add one by running the `delgont:user` command and follow the prompts.
-
+#### # Create Admin user
 ```php
 php artisan delgont:user --create
 ```
-Next you may navigate to you applications `delgont.com/delgont` path in your browser and you should be presented with delgont dashboard or login page.
-
+#### # Access the application dashoard
 ```composer
-https://delgont.com/delgont
+https://delgont.com/dashoard
 ```
+## Configurations
 
-### # Configurations
-
-#### Web Configuration File
+#### # Web Configuration File
 
 The `config\web` configuration file holds the configuration options that are use to create content for your content delivery application. In here is where you define your core page keys, post types and categories etc
 
-1. Default Page Keys
-
- Each page must have a unique key eg home, about-us, services, contact-us These page keys may be used as labels on the navigation menu, these can be edited later
+`Default Page Keys`
 
 ```php
 'pages' => [
     'home', 'about-us', 'services', 'contact-us', 'gallery', 'team'
 ],
 ```
-
-2. Default Post Types
-
- Even though posts may be categorized futher, each post must belong to a specific type Post types can also be entered manually via the cms keeping in mind that they must belong to specific pages or categories
+`Default Post Types`
 
 ```php
 'post_types' => [
@@ -102,7 +77,7 @@ The `config\web` configuration file holds the configuration options that are use
 ],
 ```
 
-3.  Default Categories -- used to categorise posts and any model that uses the Categorable trait
+`Default Categories`
 
 ```php
  'categories' => [
@@ -110,7 +85,7 @@ The `config\web` configuration file holds the configuration options that are use
     ],
 ```
  
-### # Customization
+#### # Customization
 
 You can customise delgont CMS by changing the options in `config\delgont` configuration file.
 
@@ -123,21 +98,14 @@ You can customise delgont CMS by changing the options in `config\delgont` config
 'middlewares' => ['web', 'auth', 'etc'],
  ```
 
- ## Quick Commands
+ #### # Quick Commands
 
- ```composer
-php artisan delgont:install --fresh
+`php artisan delgont:install --fresh` `php artisan migrate:fresh` `php artisan delgont:user --create --default` `php artisan page:sync --fresh` `php artisan posttype:sync` `php artisan category:sync`
 
-php artisan migrate:fresh
+## License
 
-php artisan delgont:user --create --default
+The Delgont CMS Package is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
 
-php artisan page:sync --fresh
-
-php artisan posttype:sync
-
-php artisan category:sync
-```
 
 
 

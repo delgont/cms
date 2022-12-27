@@ -120,6 +120,7 @@ class PostController extends Controller
     {
         $posttypes = PostType::all();
         $categories = Category::postCategories()->get();
+
         $post = $this->postRepository->find($id, ['*'], [
             'author:id,name',
             'updatedBy:id,name',
@@ -131,6 +132,7 @@ class PostController extends Controller
             'menu',
             'postsOfType',
             'links',
+            'options',
             'comments' => function($q){
                 $q->orderBy('created_at', 'desc')->limit(4);
             }

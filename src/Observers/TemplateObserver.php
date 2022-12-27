@@ -2,21 +2,21 @@
 
 namespace Delgont\Cms\Observers;
 
-use Delgont\Cms\Models\Post\Post;
+use Delgont\Cms\Models\Template\Template;
 use Illuminate\Support\Facades\Cache;
 
-use Delgont\Cms\Cache\Post\PostCacheManager;
+use Delgont\Cms\Cache\Template\TemplateCacheManager;
 
 
 
-class PostObserver
+class TemplateObserver
 {
 
-    protected $postCacheManger;
+    protected $templateCacheManager;
 
     public function __construct()
     {
-        $this->postCacheManger = app(PostCacheManager::class);
+        $this->templateCacheManager = app(TemplateCacheManager::class);
     }
 
     /**
@@ -25,8 +25,21 @@ class PostObserver
      * @param  \App\Option  $option
      * @return void
      */  
-    public function created(Post $post)
+    public function created(Template $template)
     {
+        $this->templateCacheManager->storePathInCache($template);
+    }
+
+
+    /**
+     * Handle the option "created" event.
+     *
+     * @param  \App\Option  $option
+     * @return void
+     */  
+    public function retrieved(Template $template)
+    {
+        $this->templateCacheManager->storePathInCache($template);
     }
 
     /**
@@ -35,15 +48,8 @@ class PostObserver
      * @param  \App\Option  $option
      * @return void
      */
-    public function updated(Post $post)
+    public function updated(Template $template)
     {
-        $this->postCacheManger->flush();
-
-        $this->postCacheManger->clearModelFromCache($post->slug);
-        $this->postCacheManger->clearPostPosts($post);
-        $this->postCacheManger->clearChildrenFromCache($post);
-        $this->postCacheManger->clearCategories($post->id);
-        
     }
 
     /**
@@ -52,7 +58,7 @@ class PostObserver
      * @param  \App\Option  $option
      * @return void
      */
-    public function deleted(Post $option)
+    public function deleted(Template $template)
     {
     }
 
@@ -62,7 +68,7 @@ class PostObserver
      * @param  \App\Option  $option
      * @return void
      */
-    public function restored(Post $option)
+    public function restored(Template $template)
     {
     }
 
@@ -72,7 +78,7 @@ class PostObserver
      * @param  \App\Option  $option
      * @return void
      */
-    public function forceDeleted(Post $option)
+    public function forceDeleted(Template $template)
     {
     }
 }

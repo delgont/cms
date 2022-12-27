@@ -4,6 +4,8 @@ namespace Delgont\Cms\Cache\Concerns;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Pagination\LengthAwarePaginator;
+
 
 
 trait HandlesModelCaching
@@ -51,9 +53,10 @@ trait HandlesModelCaching
 
     public function generateModelUnitCacheKey ( Model $model, $key = null ) : string 
     {
+        return ($key) ? $this->getCachePrefix($model).':'.$key : $this->getCachePrefix($model).':'.$model->getKey();
 
         if ($model instanceof $this->model) {
-            if (($this->getKey())) {
+            if ($this->getKey()) {
                 return $this->getCachePrefix().':'.$model->getAttribute($this->getKey());
             } elseif($key) {
                 return $this->getCachePrefix().':'.$model->getAttribute($key);
@@ -61,7 +64,8 @@ trait HandlesModelCaching
                 return $this->getCachePrefix().':'.$model->getKey();;
             }
         }
-        return $this->getCachePrefix($model).':'.$model->getKey();
+
+        return null;
     }
 
 
@@ -74,6 +78,12 @@ trait HandlesModelCaching
     {
         return $this->writeToCache($cacheKey, $collection);
     }
+
+    public function storeLengthAwarePaginatorInCache( LengthAwarePaginator $data, $cacheKey) : bool
+    {
+        return $this->writeToCache($cacheKey, $data);
+    }
+
 
 
     public function storeModelsInCache(array $models)

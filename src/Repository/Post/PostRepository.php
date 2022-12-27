@@ -102,18 +102,17 @@ class PostRepository extends BaseRepository
         }
 
         if($postModel){
-
            if ($this->fromCache) {
                 $cached = Cache::get($this->generateModelUnitCacheKey($this->template, 'path:'.$postModel->template_id));
                 if($cached){
                     return $cached;
                 }else{
-                    $template = Template::whereId($postModel->template_id)->firstOrFail();
+                    $template = Template::whereId($postModel->template_id)->first();
                     ($template) ? $this->storeInCache($template->path, $this->generateModelUnitCacheKey($this->template, 'path:'.$postModel->template_id)) : '';
                     return ($template) ? $template->path : null;
                 }
             } else {
-                $template = Template::whereId($postModel->template_id)->firstOrFail();
+                $template = Template::whereId($postModel->template_id)->first();
                 return ($template) ? $template->path : null;
             }
         }
@@ -129,7 +128,7 @@ class PostRepository extends BaseRepository
                     return ($template) ? $template->path : null;
                 }
             } else {
-                $template = Template::whereId($this->post->template_id)->firstOrFail();
+                $template = Template::whereId($this->post->template_id)->first();
                 return ($template) ? $template->path : null;
             }
         }
@@ -180,12 +179,22 @@ class PostRepository extends BaseRepository
         return $categories;
     }
 
-    public function children(Post $postModel = null, array $attributes = ['*'], $relations = []) : ? LengthAwarePaginator
+    public function children(Post $postModel = null, $offset = 1, $pagination = 3, array $attributes = ['*'], $relations = []) : ? LengthAwarePaginator
     {
+        //return $this->generateModelUnitCacheKey($this->model, $this->post->id.':children:'.'1');
         if ($this->post) {
-            return $this->post->children((count($relations) > 0) ? $relations : $this->with)->paginate(6, $attributes);
+            if ($this->fromCache) {
+                $cached = Cache::get($this->generateModelUnitCacheKey($this->model, $this->post->id.':children:offset:'.$offset));
+                if ($cached) {
+                    return $cached;
+                } else {
+                    $children = $this->post->children((count($relations) > 0) ? $relations : $this->with)->orderBy('created_at', 'desc')->paginate($pagination, $attributes, 'page', $offset);
+                    $this->storeLengthAwarePaginatorInCache($children, $this->generateModelUnitCacheKey($this->model, $this->post->id.':children:offset:'.$offset));
+                    return $children;
+                }
+            }
         }
-        return $this->model;
+        return null;
     }
     
     /**
@@ -196,18 +205,47 @@ class PostRepository extends BaseRepository
      * @param array $relations
      * @return Object LengthAwarePaginator
      */
-    public function ofType($type = null, array $attributes = ['*'], $relations = []) : ? LengthAwarePaginator
+    public function ofType($type = null, $offset = 1, $pagination = 3, array $attributes = ['*'], $relations = []) : ? LengthAwarePaginator
     {
         if ($type) {
-            return $this->model->with((count($relations) > 0) ? $relations : $this->with)->ofTYpe($type)->get($attributes);
+            return $this->model->with((count($relations) > 0) ? $relations : $this->with)->ofTYpe($type)->paginate($pagination, $attributes);
         }
         if ($this->post) {
-            if ($this->post->postsOfType) {
-                return ($this->post->postsOfType->post_type_id) ? $this->model->with((count($relations) > 0) ? $relations : $this->with)->ofTYpe($this->post->postsOfType->post_type_id)->paginate(4, $attributes) : null;
+            if ($this->fromCache) {
+
+                if ($this->post->postsOfType && $this->post->postsOfType->post_type_id) {
+                    $cached = Cache::get($this->generateModelUnitCacheKey($this->model, $this->post->id.':postsOfType:'.$this->post->postsOfType->post_type_id.':offset:'.$offset));
+                    if($cached){
+                        return $cached;
+                    }else{
+                        $posts = $this->model->with((count($relations) > 0) ? $relations : $this->with)->ofTYpe($this->post->postsOfType->post_type_id)->orderBy('created_at', 'desc')->paginate($pagination, $attributes, 'page', $offset);
+                        $this->storeLengthAwarePaginatorInCache($posts, $this->generateModelUnitCacheKey($this->model, $this->post->id.':postsOfType:'.$this->post->postsOfType->post_type_id.':offset:'.$offset));
+                        return $posts;
+                    }
+                }
+                return null;
             }
+            
         }
         return null;
     }
 
+    public function option(string $key, $post = null) : ? Model
+    {
+        return ($this->post) ? $this->post->options()->where('key', $key)->first() : $post->options()->where('key', $key)->first();
+    }
+
+    public function options($post = null) : ? Collection 
+    {
+        return ($this->post) ? $this->post->options()->get() : $post->options()->get();
+    }
+
+    public function ofCategory($category = null, $offset = 1, $pagination = 3, array $attributes = ['*'], $relations = []) : ? LengthAwarePaginator
+    {
+        if ($category) {
+            return $this->model->with((count($relations) > 0) ? $relations : $this->with)->ofCategory($category)->orderBy('created_at', 'desc')->paginate($pagination, $attributes);
+        }
+        return null;
+    }
    
 }

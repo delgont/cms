@@ -27,11 +27,9 @@ class CreateOptionTables extends Migration
             $table->text('value');
             $table->string('model_type');
             $table->unsignedBigInteger('model_id');
-
             $table->timestamps();
-
             $table->index(['model_type', 'model_id'], 'model_has_options_model_id_model_type_index');
-
+            
             $table->primary(['key','model_id', 'model_type'],
             'model_has_options_option_model_type_primary');
 

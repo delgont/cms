@@ -10,6 +10,7 @@ trait HasOptions {
         return $this->morphMany(ModelOption::class, 'model');
     }
 
+
     public function scopeWithOptions($query, $options = null)
     {
         if (!is_null($options)) {
