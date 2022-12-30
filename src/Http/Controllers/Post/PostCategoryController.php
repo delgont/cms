@@ -38,12 +38,17 @@ class PostCategoryController extends Controller
         return back()->withInput();
     }
 
+    public function show($id)
+    {
+        $category = Category::findOrFail($id);
+        return $category;
+    }
+
 
     public function destroy($id)
     {
         PostType::destroy($id);
         return back()->with('deleted', 'Post Type deleted successfully');
-
     }
    
 

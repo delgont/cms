@@ -11,6 +11,8 @@ use Delgont\Cms\Models\Post\PostType;
 use Delgont\Cms\Models\Template\Template;
 use Delgont\Cms\Models\Category\Category;
 
+use App\User;
+
 
 
 class PageSyncCommand extends Command
@@ -31,7 +33,7 @@ class PageSyncCommand extends Command
 
     protected $pages;
 
-    private $attributes = ['id', 'post_title', 'slug', 'created_at'];
+    private $attributes = ['id', 'post_title', 'created_by', 'slug', 'created_at'];
 
 
 
@@ -73,6 +75,7 @@ class PageSyncCommand extends Command
                                 'extract_text' => (array_key_exists('extract_text', $this->pages[$i])) ?  $this->pages[$i]['extract_text'] : null,
                                 'post_featured_image' => (array_key_exists('post_featured_image', $this->pages[$i])) ?  $this->pages[$i]['post_featured_image'] : null,
                                 'slug' => (array_key_exists('slug', $this->pages[$i])) ?  $this->pages[$i]['slug'] : null,
+                                'created_by' => $this->randomAuthorId(),
                             ]);
                             return;
                         }else{
@@ -100,7 +103,8 @@ class PageSyncCommand extends Command
                 'post_featured_image' => (array_key_exists('post_featured_image', $this->pages[$i])) ?  $this->pages[$i]['post_featured_image'] : null,
                 'slug' => (array_key_exists('slug', $this->pages[$i])) ?  $this->pages[$i]['slug'] : str_replace(' ', '-', $this->pages[$i]['post_title']),
                 'post_type_id' => (array_key_exists('post_type', $this->pages[$i])) ? PostType::firstOrCreate(['name' => $this->pages[$i]['post_type']])->id : PostType::firstOrCreate(['name' => 'post'])->id,
-                'template_id' => (array_key_exists('template', $this->pages[$i])) ? $this->assignTemplateToPost($this->pages[$i]['template']) : null
+                'template_id' => (array_key_exists('template', $this->pages[$i])) ? $this->assignTemplateToPost($this->pages[$i]['template']) : null,
+                'created_by' => $this->randomAuthorId(),
             ]);
 
 
@@ -125,6 +129,12 @@ class PageSyncCommand extends Command
         ])->id;
 
         ($id) ? $post->sync($id) : '';
+    }
+
+    private function randomAuthorId()
+    {
+        $user = User::first();
+        return ($user) ? $user->id : null;
     }
 
     

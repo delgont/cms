@@ -5,8 +5,19 @@ namespace Delgont\Cms\Observers;
 use Delgont\Cms\Models\Option\Option;
 use Illuminate\Support\Facades\Cache;
 
+use Delgont\Cms\Cache\Option\OptionCacheManager;
+
+
 class OptionObserver
 {
+
+    protected $cacheManger;
+
+    public function __construct()
+    {
+        $this->cacheManger = app(OptionCacheManager::class);
+    }
+
     /**
      * Handle the option "created" event.
      *
@@ -15,7 +26,7 @@ class OptionObserver
      */  
     public function created(Option $option)
     {
-        Cache::forever($option->option_key, $option->option_value);
+        $this->cacheManger->storeModelInCache($option, 'option_key');
     }
 
     /**
@@ -26,7 +37,8 @@ class OptionObserver
      */
     public function updated(Option $option)
     {
-        Cache::forever($option->option_key, $option->option_value);
+        $this->cacheManger->clearValueFromCache($option->option_key);
+        $this->cacheManger->clearModelFromCache($option->option_key);
     }
 
     /**
@@ -37,7 +49,8 @@ class OptionObserver
      */
     public function deleted(Option $option)
     {
-        Cache::forget($option->option_key, $option->option_value);
+        $this->cacheManger->clearValueFromCache($option->option_key);
+        $this->cacheManger->clearModelFromCache($option->option_key);
     }
 
     /**
@@ -48,7 +61,6 @@ class OptionObserver
      */
     public function restored(Option $option)
     {
-        Cache::forever($option->option_key, $option->option_value);
     }
 
     /**
@@ -59,6 +71,7 @@ class OptionObserver
      */
     public function forceDeleted(Option $option)
     {
-        Cache::forget($option->option_key, $option->option_value);
+        $this->cacheManger->clearValueFromCache($option->option_key);
+        $this->cacheManger->clearModelFromCache($option->option_key);
     }
 }

@@ -44,7 +44,14 @@ class Post extends Model
         return $query->whereType('2');
     }
 
-    public function getPublisedAttribute($value)
+
+     /**
+     * Convert published attribute to boolean
+     *
+     * @param string $value
+     * @return bool
+     */
+    public function getPublisedAttribute($value) : ? bool
     {
         return bool($value);
     }
@@ -83,6 +90,38 @@ class Post extends Model
     public function scopeUnPublished($query) : object
     {
         return $query->wherePublished('0');
+    }
+
+     /**
+     * Determine if the post instance has been published.
+     *
+     * @return bool
+     */
+    public function published() : ? bool
+    {
+        return ($this->{'published'}) ? true : false;
+    }
+
+    /**
+     * Publish post instance
+     *
+     * @return void
+     */
+    public function publish()
+    {
+        $this->{$this->getTable().'.'.'published'} = '1';
+        $this->save();
+    }
+
+     /**
+     * UnPublish post instance
+     *
+     * @return void
+     */
+    public function unPublish()
+    {
+        $this->{$this->getTable().'.'.'published'} = '0';
+        $this->save();
     }
 
     /**

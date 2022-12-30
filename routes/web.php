@@ -20,6 +20,7 @@ use Delgont\Cms\Http\Controllers\Menu\MenuItemController;
 use Delgont\Cms\Http\Controllers\Category\CategoryController;
 
 use Delgont\Cms\Http\Controllers\Command\CommandController;
+use Delgont\Cms\Http\Controllers\Console\ConsoleController;
 
 use Delgont\Cms\Http\Controllers\DashboardController;
 
@@ -62,12 +63,16 @@ Route::group(['prefix' => config('delgont.route_prefix', 'dashboard'), 'middlewa
         /** Templates Routes */
         Route::prefix('/templates')->group(__DIR__.'/web/templates.php');
 
+        Route::get('/console', [ConsoleController::class, 'index'])->name('delgont.console.commands');
+        Route::post('/console/run', [ConsoleController::class, 'run'])->name('delgont.console.commands.run');
+
         Route::get('/commands', [CommandController::class, 'index'])->name('delgont.commands');
         Route::post('/commands/run', [CommandController::class, 'run'])->name('delgont.commands.run');
 
         Route::get('/categories', [CategoryController::class, 'index'])->name('delgont.categories');
         Route::post('/categories/store', [CategoryController::class, 'store'])->name('delgont.categories.store');
         Route::get('/categories/edit/{id}', [CategoryController::class, 'edit'])->name('delgont.categories.edit');
+        Route::get('/categories/show/{id}', [CategoryController::class, 'show'])->name('delgont.categories.show');
         Route::get('/categories/destroy/{id}', [CategoryController::class, 'destroy'])->name('delgont.categories.destroy');
 
 

@@ -44,9 +44,6 @@ class BaseRepository implements EloquentRepositoryInterface
         $this->cachePrefix = get_class($this->model);
     }
 
-
-
-    
     public function fromCache( )
     {
         $this->fromCache = true;

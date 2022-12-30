@@ -57,5 +57,28 @@ class Category extends Model
     {
         return $this->hasMany(Categorable::class);
     }
+
+    public function scopeHidden($query)
+    {
+        return $query->where('hidden', '1');
+    }
+
+    public function hide()
+    {
+        $this->{$this->getTable().'.'.'hidden'} = '1';
+        $this->save();
+    }
+
+    public function unHide()
+    {
+        $this->{$this->getTable().'.'.'hidden'} = '0';
+        $this->save();
+    }
+
+    public function hidden() : ? bool
+    {
+        return ($this->{$this->getTable().'.'.'hidden'}) ? true : false;
+    }
+    
   
 }

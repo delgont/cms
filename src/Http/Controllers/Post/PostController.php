@@ -9,6 +9,7 @@ use Delgont\Cms\Models\Category\Category;
 
 use Delgont\Cms\Http\Requests\PostRequest;
 use Delgont\Cms\Models\Post\PostType;
+use Delgont\Cms\Models\Post\Post;
 
 use Delgont\Cms\Services\Post\PostService;
 use Delgont\Cms\Services\Image\ImageUploadService;
@@ -93,6 +94,7 @@ class PostController extends Controller
 
         $post->categories()->sync($request->category);
 
+
         return ($request->expectsJson()) ? response()->json(['success' => true,'message' => 'Post Created Successfully',], 200) : back()->withInput()->with('created', 'Post Created Successfully');
     }
 
@@ -113,6 +115,7 @@ class PostController extends Controller
                 $q->orderBy('created_at', 'desc')->limit(4);
             }
         ]);
+
         return (request()->expectsJson()) ? response()->json($post) : view('delgont::posts.show', compact(['post']));
     }
 
