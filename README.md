@@ -6,8 +6,6 @@
 #### # Requirements
 `Composer` `Laravel Framework 6.0+`
 
-#### # Browser Support
-`Apple Safari` `Google Chrome` `Microsoft Edge` `Mozilla Firefox`
 
 #### # Installing Delgont CMS via composer
 

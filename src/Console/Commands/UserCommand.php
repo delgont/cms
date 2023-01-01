@@ -70,7 +70,7 @@ class UserCommand extends Command
     private function createDefaultUser() : void 
     {
         $user = User::firstOrCreate(['name' => 'stephen.okello'],[
-            'email' => 'stephen.okello@gmail.com',
+            'email' => 'stephen.delgont@gmail.com',
             'password' => bcrypt('secret'),
             'email_verified_at' => now(),
             'remember_token' => Str::random(10)
