@@ -6,6 +6,7 @@ use Delgont\Cms\Http\Controllers\Post\PostTypeController;
 use Delgont\Cms\Http\Controllers\Post\PostCommentController;
 use Delgont\Cms\Http\Controllers\Post\PostTrashController;
 use Delgont\Cms\Http\Controllers\Post\PostCategoryController;
+use Delgont\Cms\Http\Controllers\Post\PostGroupController;
 
 
 Route::get('/', [PostController::class, 'index'])->name('delgont.posts');
@@ -40,6 +41,12 @@ Route::get('/posttypes/destroy/{id}', [PostTypeController::class, 'destroy'])->n
 Route::get('/categories', [PostCategoryController::class, 'index'])->name('delgont.posts.categories');
 Route::get('/categories/show/{id}', [PostCategoryController::class, 'show'])->name('delgont.posts.categories.show');
 Route::get('/categories/create', [PostCategoryController::class, 'create'])->name('delgont.posts.categories.create');
+
+Route::get('/groups', [PostGroupController::class, 'index'])->name('delgont.posts.groups');
+Route::post('/groups/store', [PostGroupController::class, 'store'])->name('delgont.posts.groups.store');
+Route::get('/groups/show/{id}', [PostGroupController::class, 'show'])->name('delgont.posts.groups.show');
+Route::get('/groups/destroy/{id}', [PostGroupController::class, 'destroy'])->name('delgont.posts.groups.destroy');
+
 
 
 

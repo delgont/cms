@@ -5,6 +5,7 @@ namespace Delgont\Cms\Models\Post;
 
 use Illuminate\Database\Eloquent\Model;
 use Delgont\Cms\Models\Concerns\Categorable;
+use Delgont\Cms\Models\Concerns\Groupable;
 use Delgont\Cms\Models\Concerns\Iconable;
 use Delgont\Cms\Models\Concerns\Downloadable;
 use Delgont\Cms\Models\Concerns\HasAuthor;
@@ -28,7 +29,7 @@ use Illuminate\Database\Eloquent\Concerns\HasEvents;
 
 class Post extends Model
 {
-    use Categorable, Iconable, HasAuthor, UpdatedBy, SoftDeletes, HasComments, HasPostsOfType, Searchable, HasLinks, HasEvents, HasOptions;
+    use Categorable, Groupable, Iconable, HasAuthor, UpdatedBy, SoftDeletes, HasComments, HasPostsOfType, Searchable, HasLinks, HasEvents, HasOptions;
 
 
     protected $fillable = [

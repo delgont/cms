@@ -19,7 +19,10 @@ class TemplateRepository extends BaseRepository
         parent::__construct($model);
     }
 
-
+    /**
+     * Store template path in cache
+     * @param mixed $payload
+     */
     public function storePathInCache($payLoad) : ? bool
     {
         if ($payLoad instanceof $this->model) {
@@ -29,6 +32,30 @@ class TemplateRepository extends BaseRepository
             return $this->storeInCache($payLoad['path'], $this->getCachePrefix($this->model).':path:'.$payLoad['id']);
         }
         return false;
+    }
+
+    /**
+     * Get Template Path
+     * 
+     * @param int $id
+     * @return string
+     */
+    public function getTemplatePath( $id ) : ? string
+    {
+        if ($this->fromCache) {
+            //Get template path from cache
+            $cached = Cache::get($this->getCachePrefix().':path:'.$id);
+            if ($cached) {
+                # code...
+                return $cached;
+            }else{
+                $model = $this->model->whereId($id)->first();
+                ($model) ? $this->storePathInCache($model) : '';
+                return ($model) ? $model->path : null;
+            }
+        }
+        $model = $this->model->whereId($id)->first();
+        return ($model) ? $model->path : null;
     }
    
 }

@@ -12,5 +12,12 @@ class Group extends Model
     
     protected $guarded = [];
 
+    /**
+     * Get groups for specific model type
+     */
+    public function scopeGroups($query, $model = null)
+    {
+        return ($model) ? $query->whereType(($model instanceof Model) ? get_class($model) : $model)->orWhere('type', null) : $query;
+    }
 
 }

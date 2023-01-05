@@ -17,7 +17,6 @@ class OptionRepository extends BaseRepository
     public function __construct(Option $model){
         parent::__construct($model);
     }
-    
 
     /**
      * Gets option value

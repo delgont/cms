@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 trait GeneratesModelUnitCacheKey
 {
-
     public function generateModelUnitCacheKey ( Model $model, $key = null ) : string 
     {
         if (property_exists($this, 'model')) {
@@ -27,4 +26,5 @@ trait GeneratesModelUnitCacheKey
             
         }
     }
+
 }

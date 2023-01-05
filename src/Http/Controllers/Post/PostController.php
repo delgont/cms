@@ -40,7 +40,7 @@ class PostController extends Controller
     */
     public function index()
     {
-        $posts = $this->postRepository->paginate(['*'], [
+        $posts = $this->postRepository->paginate(6, 1, ['*'], [
             'author:id,name',
             'updatedBy:id,name',
             'posttype:id,name',

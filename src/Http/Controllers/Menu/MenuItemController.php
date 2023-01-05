@@ -44,6 +44,7 @@ class MenuItemController extends Controller
     public function store(Request $request)
     {
 
+        return $request;
         $menuitem = new MenuItem();
 
         $menuitem->label = $request->label;

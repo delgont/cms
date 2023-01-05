@@ -14,9 +14,12 @@ use Delgont\Cms\Models\Category\Category;
 
 use Illuminate\Support\Facades\Cache;
 
+//Repository Concerns
+use Delgont\Cms\Repository\Eloquent\Concerns\Categorable;
 
 class PostRepository extends BaseRepository
 {
+    use Categorable;
 
     protected $post;
     protected $template;
@@ -44,7 +47,7 @@ class PostRepository extends BaseRepository
    
 
     /**
-     * Gets the emplate for a post
+     * Gets the template for a post
      * 
      * @param string $key
      * @return Template
@@ -143,40 +146,19 @@ class PostRepository extends BaseRepository
     public function parent($key) : ? Model
     {
         if($this->fromCache){
-            $cached = Cache::get($this->cachePrefix.':parent'.$key);
+            $cached = Cache::get($this->getCachePrefix().':parent:'.$key);
             if($cached){
                 $models = $this->model::hydrate([$cached]);
                 return $model = $models[0] ?? null;
             }else{
                 $parent = $this->model->where(($this->key) ? [$this->key => $key] : ['id' => $key])->firstOrFail()->parent;
-                $this->storeModelInCache($parent, $this->cachePrefix.':parent:'.$key);
+                $this->storeModelInCache($parent, $this->getCachePrefix().':parent:'.$key);
                 return $parent;
             }
         }
         $parent = $this->model->where(($this->key) ? [$this->key => $key] : ['id' => $key])->firstOrFail()->parent;
         return $parent;
 
-    }
-
-    public function categories(Post $postModel = null)
-    {
-        $id = ($postModel) ? $postModel->id : $this->post->id;
-        if ($this->fromCache) {
-            $cached = Cache::get($this->getCachePrefix().':categories:'.$id);
-            if ($cached) {
-                return $cached;
-            }else{
-                $categories = Category::whereHas('categorables', function($query) use ($id){
-                    $query->whereCategorableId($id);
-                })->get();
-                $this->storeCollectionInCache($categories, $this->getCachePrefix().':categories:'.$id);
-                return $categories;
-            }
-        }
-        $categories = Category::whereHas('categorables', function($query) use ($id){
-            $query->whereCategorableId($id);
-        })->get();
-        return $categories;
     }
 
     public function children(Post $postModel = null, $offset = 1, $pagination = 3, array $attributes = ['*'], $relations = []) : ? LengthAwarePaginator
@@ -195,6 +177,39 @@ class PostRepository extends BaseRepository
             }
         }
         return null;
+    }
+
+    public function getChildren(Post $model = null, array $attributes = ['*'], $relations = []) 
+    {
+        if($this->paginated){
+            return $this->getPaginatedChildren($model);
+        }
+        if ($this->fromCache) {
+            $cached = Cache::get( $this->generateModelUnitCacheKey($this->model, $model->id.':children') );
+            if ($cached) {
+                return $cached;
+            } else {
+                $children = $model->children((count($relations) > 0) ? $relations : $this->with)->orderBy('created_at', 'desc')->get();
+                $this->storeCollectionInCache($children, $this->generateModelUnitCacheKey($this->model, $model->id.':children') );
+                return $children;
+            }
+        }
+        return $children = $model->children((count($relations) > 0) ? $relations : $this->with)->orderBy('created_at', 'desc')->get();
+    }
+
+    public function getPaginatedChildren(Post $model = null, array $attributes = ['*'], $relations = []) 
+    {
+        if ($this->fromCache) {
+            $cached = Cache::get( $this->generateModelUnitCacheKey($this->model, $model->id.':children:offset:'.$this->offset) );
+            if ($cached) {
+                return $cached;
+            } else {
+                $children = $model->children((count($relations) > 0) ? $relations : $this->with)->orderBy('created_at', 'desc')->paginate( $this->perPage );
+                $this->storeLengthAwarePaginatorInCache($children, $this->generateModelUnitCacheKey($this->model, $model->id.':children:offset:'.$this->offset) );
+                return $children;
+            }
+        }
+        return $children = $model->children((count($relations) > 0) ? $relations : $this->with)->orderBy('created_at', 'desc')->paginate( $this->perPage );
     }
     
     /**
@@ -225,10 +240,50 @@ class PostRepository extends BaseRepository
                 }
                 return null;
             }
-            
         }
         return null;
     }
+
+    public function getPostsOfType( $type, array $attributes = ['*'], $relations = [] )
+    {
+        if ($this->paginated) {
+            # code...
+            return $this->getPaginatedPostsOfType($type);
+        }
+        if ($this->fromCache) {
+            # code...
+            $cached = Cache::get( $this->getCachePrefix().':oftype:'.$type );
+            if ($cached) {
+                # code...
+                return $cached;
+            } else {
+                # code...
+                $posts = $this->model::ofType($type)->get();
+                ($posts) ? $this->storeCollectionInCache( $posts, $this->getCachePrefix().':oftype:'.$type ) : '';
+                return $posts;
+            }
+            
+        } 
+        return $this->model::ofType($type)->get();
+    }
+
+    private function getPaginatedPostsOfType($type)
+    {
+        if($this->fromCache){
+            $cached = Cache::get( $this->getCachePrefix().':oftype:'.$type.':offset:'.$this->offset );
+            if ($cached) {
+                # code...
+                return $cached;
+            } else {
+                # code...
+                $posts = $this->model::ofType($type)->paginate($this->perPage);
+                ($posts) ? $this->storeLengthAwarePaginatorInCache( $posts, $this->getCachePrefix().':oftype:'.$type.':offset:'.$this->offset ) : '';
+                return $posts;
+            }
+        }
+        return $this->model::ofType($type)->paginate($this->perPage);
+    }
+
 
     public function option(string $key, $post = null) : ? Model
     {
@@ -246,6 +301,56 @@ class PostRepository extends BaseRepository
             return $this->model->with((count($relations) > 0) ? $relations : $this->with)->ofCategory($category)->orderBy('created_at', 'desc')->paginate($pagination, $attributes);
         }
         return null;
+    }
+
+    /**
+     * Get posts of specific category
+     * 
+     * @param mixed $categpry
+     * @param array $attributes
+     * @param array $relations
+     * 
+     * @return Illuminate\Pagination\LengthAwarePaginator or
+     * @return Illuminate\Database\Eloquent\Collection
+     */
+    public function getPostsOfCategory( $category, array $attributes = ['*'], $relations = [])
+    {
+        if ($this->paginated) {
+            # code...
+            return $this->getPaginatedPostsOfCategory($category);
+        }
+        if ($this->fromCache) {
+            # code...
+            $cached = Cache::get( $this->getCachePrefix().':ofcategory:'.$category );
+            if ($cached) {
+                # code...
+                return $cached;
+            } else {
+                # code...
+                $posts = $this->model::ofCategory($category)->get();
+                ($posts) ? $this->storeCollectionInCache( $posts, $this->getCachePrefix().':ofcategory:'.$category ) : '';
+                return $posts;
+            }
+            
+        } 
+        return $this->model::ofCategory( $category )->get();
+    }
+
+    private function getPaginatedPostsOfCategory($category)
+    {
+        if($this->fromCache){
+            $cached = Cache::get( $this->getCachePrefix().':ofcategory:'.$category.':offset:'.$this->offset );
+            if ($cached) {
+                # code...
+                return $cached;
+            } else {
+                # code...
+                $posts = $this->model::ofCategory($category)->paginate($this->perPage);
+                ($posts) ? $this->storeLengthAwarePaginatorInCache( $posts, $this->getCachePrefix().':ofcategory:'.$category.':offset:'.$this->offset ) : '';
+                return $posts;
+            }
+        }
+        return $this->model::ofCategory($category)->paginate($this->perPage);
     }
    
 }
